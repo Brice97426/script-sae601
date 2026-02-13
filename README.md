@@ -55,7 +55,7 @@ Zone DMZ (vnet_dmz – 10.0.10.0/24)
 ```bash
 # 1. Cloner le dépôt
 git clone https://github.com/Brice97426/script-sae601.git
-cd kilbri-infra
+cd script-sae601
 
 # 2. Rendre le script exécutable
 chmod +x setup-web-server.sh
