@@ -4,7 +4,8 @@
 **Projet :** Infrastructure Proxmox Cluster avec SDN/NFV  
 **Auteurs :** BERNARDIN Brice / DENA Killian  
 **Date :** Février 2026  
-**Domaine :** kilbri.rt-iut.re
+**Domaine :** kilbri.rt-iut.re  
+**Dépôt :** [github.com/Brice97426/script-sae601](https://github.com/Brice97426/script-sae601)
 
 ---
 
@@ -12,7 +13,7 @@
 
 Ce dépôt contient les scripts d'installation et de configuration automatisée des serveurs de la zone DMZ du projet kilbri. L'infrastructure repose sur un cluster Proxmox avec SDN/NFV, OPNsense et VXLAN.
 
-### Architecture LAMP/LEMP Stack
+### Architecture LAMP Stack
 
 ```
 Zone DMZ (vnet_dmz – 10.0.10.0/24)
@@ -33,7 +34,7 @@ Zone DMZ (vnet_dmz – 10.0.10.0/24)
 ## 📁 Contenu du dépôt
 
 ```
-.
+script-sae601/
 ├── README.md                  ← Ce fichier
 ├── setup-web-server.sh        ← Script d'installation VM 110 (Apache + PHP)
 └── setup-db-server.sh         ← Script d'installation VM 111 (MariaDB)
@@ -48,33 +49,31 @@ Zone DMZ (vnet_dmz – 10.0.10.0/24)
 - VM créée sur Proxmox (selon Phase 2 du projet)
 - Debian 12 (Bookworm) installé avec SSH activé
 - Accès root ou sudo sur chaque VM
-- Connexion internet disponible (ou miroir local configuré)
+- Connexion internet disponible
 
 ### Sur le Serveur Web (VM 110 – 10.0.10.10)
 
 ```bash
-# 1. Cloner le dépôt
-git clone https://github.com/Brice97426/script-sae601.git
-cd script-sae601
+# 1. Installer git et cloner le dépôt
+apt install -y git
+git clone https://github.com/Brice97426/script-sae601.git /opt/script-sae601
+cd /opt/script-sae601
 
-# 2. Rendre le script exécutable
+# 2. Rendre le script exécutable et lancer l'installation
 chmod +x setup-web-server.sh
-
-# 3. Lancer l'installation
 sudo bash setup-web-server.sh
 ```
 
 ### Sur le Serveur DB (VM 111 – 10.0.10.20)
 
 ```bash
-# 1. Cloner le dépôt
-git clone https://github.com/Brice97426/script-sae601.git
-cd script-sae601
+# 1. Installer git et cloner le dépôt
+apt install -y git
+git clone https://github.com/Brice97426/script-sae601.git /opt/script-sae601
+cd /opt/script-sae601
 
-# 2. Rendre le script exécutable
+# 2. Rendre le script exécutable et lancer l'installation
 chmod +x setup-db-server.sh
-
-# 3. Lancer l'installation
 sudo bash setup-db-server.sh
 ```
 
@@ -102,7 +101,7 @@ sudo bash setup-db-server.sh
 | 1 | Configuration réseau statique (IP, hostname, /etc/hosts) |
 | 2 | Mise à jour système + outils de base |
 | 3 | Installation MariaDB 10.11 |
-| 4 | Sécurisation MariaDB (mysql_secure_installation automatisé) |
+| 4 | Sécurisation MariaDB (automatisée) |
 | 5 | Création base `kilbri_webapp` + utilisateurs applicatif et admin |
 | 6 | Configuration réseau MariaDB (bind-address DMZ) |
 | 7 | Optimisation des performances InnoDB |
@@ -150,7 +149,7 @@ Utilisateur : kilbri_user
 
 - [ ] Debian 12 installé avec IP fixe `10.0.10.20`
 - [ ] MariaDB 10.11 installé et actif
-- [ ] Sécurisation `mysql_secure_installation` effectuée
+- [ ] Sécurisation effectuée
 - [ ] Base `kilbri_webapp` créée
 - [ ] Utilisateur `kilbri_user` créé avec accès depuis `10.0.10.10`
 - [ ] Connexion distante activée (`bind-address = 10.0.10.20`)
@@ -173,6 +172,16 @@ mysql -h 10.0.10.20 -u admin_db -p
 # Depuis Serveur Web → Serveur DB
 php -r "new PDO('mysql:host=10.0.10.20;dbname=kilbri_webapp', 'kilbri_user', 'MotDePasseFort123!');"
 # Résultat attendu : pas d'erreur ✅
+```
+
+---
+
+## 🔄 Mises à jour du dépôt
+
+```bash
+# Sur les serveurs, pour récupérer les mises à jour :
+cd /opt/script-sae601
+git pull
 ```
 
 ---
